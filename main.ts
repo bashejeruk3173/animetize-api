@@ -9,13 +9,19 @@ const fastify = Fastify({
   logger: true,
 });
 
-export const redis =
-  process.env.REDIS_HOST &&
-  new Redis({
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD,
-  });
+export const redis = new Redis({
+  host: process.env.REDIS_HOST, // Redis host
+  port: Number(process.env.REDIS_PORT), // Redis port
+  password: process.env.REDIS_PASSWORD, // Redis password
+});
+
+redis.on('connect', () => {
+  console.log('Connected to Redis successfully!');
+});
+
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err);
+});
 
 (async () => {
   const PORT = 3000;
